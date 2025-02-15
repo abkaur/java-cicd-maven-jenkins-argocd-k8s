@@ -16,6 +16,6 @@ spec:
     spec:
       containers:
       - name: spring-boot-app
-        image: uthycloud/jenkins-cicd:6
+        image: abkaur95/jenkins-cicd:17
         ports:
         - containerPort: 8080
