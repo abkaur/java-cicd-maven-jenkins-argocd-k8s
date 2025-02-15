@@ -2,37 +2,25 @@ pipeline {
   agent {
     docker {
       image 'abhishekf5/maven-abhishek-docker-agent:v1'
-      args '--user root -v /var/run/docker.sock:/var/run/docker.sock' // mount Docker socket to access the host's Docker daemon
+      args '--user root -v /var/run/docker.sock:/var/run/docker.sock' // Mount Docker socket
     }
   }
   stages {
     stage('Checkout') {
       steps {
         sh 'echo passed'
-        git branch: 'main', url: 'https://github.com/DevOpsGodd/Ci-cd-with-jenkins-and-argocd.git'
+        git branch: 'main', url: 'https://github.com/abkaur/Ci-cd-with-jenkins-and-argocd.git'
       }
     }
     stage('Build and Test') {
       steps {
         sh 'ls -ltr'
-        // build the project and create a JAR file
         sh 'cd spring-boot-app && mvn clean package'
-      }
-    }
-    stage('Static Code Analysis') {
-      environment {
-        SONAR_URL = "http://52.28.235.242:9000"
-      }
-      steps {
-        withCredentials([string(credentialsId: 'sonar', variable: 'SONAR_AUTH_TOKEN')]) {
-          sh 'cd spring-boot-app && mvn sonar:sonar -Dsonar.login=$SONAR_AUTH_TOKEN -Dsonar.host.url=${SONAR_URL}'
-        }
       }
     }
     stage('Build and Push Docker Image') {
       environment {
-        DOCKER_IMAGE = "uthycloud/jenkins-cicd:${BUILD_NUMBER}"
-        // DOCKERFILE_LOCATION = "spring-boot-app/Dockerfile"
+        DOCKER_IMAGE = "abkaur/jenkins-cicd:${BUILD_NUMBER}"  // Updated DockerHub image name
         REGISTRY_CREDENTIALS = credentials('dockerhub')
       }
       steps {
@@ -48,13 +36,13 @@ pipeline {
     stage('Update Deployment File') {
         environment {
             GIT_REPO_NAME = "Ci-cd-with-jenkins-and-argocd"
-            GIT_USER_NAME = "devopsgodd"
+            GIT_USER_NAME = "abkaur"
         }
         steps {
-            withCredentials([string(credentialsId: 'github', variable: 'GITHUB_TOKEN')]) {
+            withCredentials([string(credentialsId: 'git-hub-token', variable: 'GITHUB_TOKEN')]) {
                 sh '''
-                    git config user.email "huxman69@gmail.com"
-                    git config user.name "Uthman"
+                    git config user.email "kaurab@sheridancollege.ca"
+                    git config user.name "abkaur"
                     BUILD_NUMBER=${BUILD_NUMBER}
                     sed -i "s/replaceImageTag/${BUILD_NUMBER}/g" spring-boot-app-manifests/deployment.yml
                     git add spring-boot-app-manifests/deployment.yml
@@ -64,5 +52,8 @@ pipeline {
             }
         }
     }
+  }
+}
+
   }
 }
