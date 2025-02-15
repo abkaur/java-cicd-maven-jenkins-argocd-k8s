@@ -1,58 +1,64 @@
 pipeline {
-  agent any  // Runs directly on the Jenkins VM
+    agent any  // Runs directly on the Jenkins VM
 
-  environment {
-    DOCKER_IMAGE = "abkaur95/jenkins-cicd:${BUILD_NUMBER}"
-    REGISTRY_CREDENTIALS = credentials('dockerhub')
-    GIT_REPO_NAME = "Ci-cd-with-jenkins-and-argocd"
-    GIT_USER_NAME = "abkaur"
-  }
-
-  stages {
-    
-    stage('Checkout') {
-      steps {
-        sh 'echo passed'
-        git branch: 'main', url: 'https://github.com/abkaur/Ci-cd-with-jenkins-and-argocd.git'
-        sh 'ls -la' // Check if Jenkinsfile exists
-      }
+    environment {
+        DOCKER_IMAGE = "abkaur95/jenkins-cicd:${BUILD_NUMBER}"
+        REGISTRY_CREDENTIALS = credentials('dockerhub')
+        GIT_REPO_NAME = "Ci-cd-with-jenkins-and-argocd"
+        GIT_USER_NAME = "abkaur"
     }
 
-    stage('Build and Test') {
-      steps {
-        sh 'ls -ltr'
-        sh 'cd spring-boot-app && mvn clean package'
-      }
-    }
+    stages {
 
-    stage('Build and Push Docker Image') {
-      steps {
-        script {
-          sh 'cd spring-boot-app && docker build -t ${DOCKER_IMAGE} .'
-          sh 'docker login -u abkaur95 -p ${REGISTRY_CREDENTIALS}'  // Ensure authentication
-          sh 'docker push ${DOCKER_IMAGE}'  // Push manually instead of using docker.image
+        stage('Checkout') {
+            steps {
+                sh 'echo passed'
+                git branch: 'main', url: 'https://github.com/abkaur/Ci-cd-with-jenkins-and-argocd.git'
+                sh 'ls -la' // Check if Jenkinsfile exists
+            }
         }
-      }
-    }
 
-    stage('Update Deployment File') {
-      steps {
-        withCredentials([string(credentialsId: 'git-hub-token', variable: 'GITHUB_TOKEN')]) {
-          sh '''
-            git config user.email "kaurab@sheridancollege.ca"
-            git config user.name "abkaur"
-            BUILD_NUMBER=${BUILD_NUMBER}
-            sed -i "s/replaceImageTag/${BUILD_NUMBER}/g" spring-boot-app-manifests/deployment.yml
-            git add spring-boot-app-manifests/deployment.yml
-            git commit -m "Update deployment image to version ${BUILD_NUMBER}"
-            git push https://${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME} HEAD:main
-          '''
+        stage('Build and Test') {
+            steps {
+                sh '''
+                    ls -ltr
+                    cd spring-boot-app && mvn clean package
+                '''
+            }
         }
-      }
-    }
 
-  } // End of stages
+        stage('Build and Push Docker Image') {
+            steps {
+                script {
+                    withCredentials([string(credentialsId: 'dockerhub', variable: 'DOCKER_PASSWORD')]) {
+                        sh '''
+                            echo "$DOCKER_PASSWORD" | docker login -u abkaur95 --password-stdin
+                            docker build -t ${DOCKER_IMAGE} .
+                            docker push ${DOCKER_IMAGE}
+                        '''
+                    }
+                }
+            }
+        }
+
+        stage('Update Deployment File') {
+            steps {
+                withCredentials([string(credentialsId: 'git-hub-token', variable: 'GITHUB_TOKEN')]) {
+                    sh '''
+                        git config user.email "kaurab@sheridancollege.ca"
+                        git config user.name "abkaur"
+                        sed -i "s/replaceImageTag/${BUILD_NUMBER}/g" spring-boot-app-manifests/deployment.yml
+                        git add spring-boot-app-manifests/deployment.yml
+                        git commit -m "Update deployment image to version ${BUILD_NUMBER}"
+                        git push https://${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME} HEAD:main
+                    '''
+                }
+            }
+        }
+
+    } // End of stages
 } // End of pipeline
+
 
 
 
