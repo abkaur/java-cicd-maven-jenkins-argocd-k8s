@@ -1,6 +1,6 @@
 pipeline {
   agent {
-    docker {
+    dockerContainer {
       image 'abhishekf5/maven-abhishek-docker-agent:v1'
       args '--user root -v /var/run/docker.sock:/var/run/docker.sock' // Mount Docker socket
     }
@@ -13,7 +13,6 @@ pipeline {
         sh 'echo passed'
         git branch: 'main', url: 'https://github.com/abkaur/Ci-cd-with-jenkins-and-argocd.git' // ✅ Using your forked repo
         sh 'ls -la' // ✅ Confirm Jenkinsfile location
-        sh 'cat spring-boot-app/Jenkinsfile' // ✅ Check if Jenkinsfile exists
       }
     }
 
@@ -69,5 +68,6 @@ pipeline {
 
   } // End of stages
 } // End of pipeline
+
 
 
