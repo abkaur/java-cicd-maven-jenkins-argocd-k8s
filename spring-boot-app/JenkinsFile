@@ -5,13 +5,13 @@ pipeline {
       args '--user root -v /var/run/docker.sock:/var/run/docker.sock' // Mount Docker socket
     }
   }
-  stages {
-    stage('Checkout') {
-      steps {
-        sh 'echo passed'
-        git branch: 'main', url: 'https://github.com/abkaur/Ci-cd-with-jenkins-and-argocd.git'
-      }
-    }
+  stage('Checkout') {
+  steps {
+    sh 'echo passed'
+    git branch: 'main', url: 'https://github.com/abkaur/Ci-cd-with-jenkins-and-argocd.git'
+    sh 'ls -la' // Check if Jenkinsfile exists
+  }
+}
     stage('Build and Test') {
       steps {
         sh 'ls -ltr'
