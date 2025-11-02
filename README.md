@@ -98,9 +98,10 @@ If integrated, **Jenkins** would update the `values.yaml` file instead of raw YA
 
 ## 📄 Reference Materials
 
-* **Report:** `docs/CI-CD-Java-Pipeline-Report.pdf`
-* **Architecture Diagram:** `docs/pipeline-architecture.png`
-* **Setup Documentation:** `docs/SETUP.md`
+- [📘 Report](./docs/CI-CD-Java-Pipeline-Report.pdf)
+- [🗺️ Architecture Diagram](./docs/Java-pipeline-architecture.png)
+- [⚙️ Setup Documentation](./docs/SETUP.md)
+
 
 ---
 
