@@ -94,6 +94,8 @@ Helm allows:
 
 If integrated, **Jenkins** would update the `values.yaml` file instead of raw YAML manifests, and **Argo CD** would synchronize based on the Helm chart repository.
 
+Although this project currently uses plain Kubernetes manifests, Helm charts can be used to parameterize and package these manifests for different environments. I have already experimented with Helm-based deployments (see my Helm Charts for ArgoCD repository), and the next step would be to replace manual manifests with Helm templates for automated, version-controlled releases through ArgoCD.
+
 ---
 
 ## 📄 Reference Materials
