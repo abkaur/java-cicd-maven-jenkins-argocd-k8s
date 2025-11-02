@@ -98,18 +98,19 @@ Although this project currently uses plain Kubernetes manifests, Helm charts can
 
 ---
 
-## 🔮 Future Enhancements
+## 🧩 Future Enhancements
 
-- **Helm Chart Integration:**  
-  While this project currently uses plain Kubernetes manifests, the next logical step is to integrate **Helm charts** for deployment. Helm would allow packaging Kubernetes resources into reusable templates, supporting environment-specific values (dev, test, prod), and improving scalability and maintainability.  
-  This would also make **Argo CD** integration more efficient, as Argo CD can directly track Helm chart versions for automated, version-controlled rollouts.
+### 🔹 Helm Chart Integration
+While this project currently uses plain Kubernetes manifests, the next logical step is to integrate **Helm charts** for deployment.  
+Helm allows packaging Kubernetes resources into reusable templates, supporting environment-specific values (dev, test, prod), and improving scalability and maintainability.  
+This would also make **Argo CD** integration more efficient, as Argo CD can directly track Helm chart versions for automated, version-controlled rollouts.
 
-- **Centralized Configuration Management:**  
-  Integrate a ConfigMap/Secret management tool like **HashiCorp Vault** or **External Secrets Operator** for secure handling of environment variables.
+### 🔹 Centralized Configuration Management
+Integrate a ConfigMap/Secret management tool like **HashiCorp Vault** or **External Secrets Operator** for secure handling of environment variables.
 
-- **Enhanced Monitoring:**  
-  Add **Prometheus** and **Grafana** dashboards for real-time visibility into build, deployment, and cluster health.
-  
+### 🔹 Enhanced Monitoring
+Add **Prometheus** and **Grafana** dashboards for real-time visibility into build, deployment, and cluster health.
+
 *(Helm integration already explored in a separate experiment: [helm-charts-for-argocd](https://github.com/abkaur/helm-charts-for-argocd))*
 
 ## 📄 Reference Materials
