@@ -1,6 +1,6 @@
 # Jenkins Pipeline for Java based application using Maven, SonarQube, Argo CD, Helm and Kubernetes
 
-![CI/CD Architecture](./docs/java-pipeline-architecture.png)
+![CI/CD Architecture](./docs/Java-pipeline-architecture.png)
 
 
 
